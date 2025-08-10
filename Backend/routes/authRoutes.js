@@ -10,7 +10,7 @@ const router = express.Router();
 const upload = require("../middlewares/uploadMiddleware");
 
 // authRoutes
-router.post("/register", registerUser);
+router.post("/register", upload.single("profileImage"), registerUser);
 router.post("/login", loginUser);
 router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);

@@ -19,20 +19,26 @@ const generateToken = (userId)=>{
 
 // Register New User (POST)
 // access Public
-const registerUser = async(req, res)=>{
+const registerUser = async (req, res) => {
     try {
-        const { name, email, password, profileImageUrl, adminInviteToken } = req.body;
+        const { name, email, password, adminInviteToken } = req.body;
+        let profileImageUrl = req.body.profileImageUrl; // default if provided via JSON
+
+        // If file uploaded, override with generated URL
+        if (req.file) {
+            profileImageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+        }
 
         // check if user already exists
-        const userExist = await User.findOne({email});
-        if(userExist){
-            return res.status(400).json({message:"This email already exists, Add new email"})
+        const userExist = await User.findOne({ email });
+        if (userExist) {
+            return res.status(400).json({ message: "This email already exists, Add new email" });
         }
 
         // determine user role: Verify given admin token
-        let role = "member"
-        if( adminInviteToken && adminInviteToken === process.env.ADMIN_INVITE_TOKEN){
-            role = "admin"
+        let role = "member";
+        if (adminInviteToken && adminInviteToken === process.env.ADMIN_INVITE_TOKEN) {
+            role = "admin";
         }
 
         // Hash Password
@@ -40,30 +46,29 @@ const registerUser = async(req, res)=>{
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create User
-        const user = await User.create(
-            {
-                name,
-                email,
-                password:hashedPassword,
-                profileImageUrl,
-                role
-            }
-        );
+        const user = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            profileImageUrl,
+            role
+        });
 
         res.status(201).json({
-            success:true,
-            _id:user._id,
-            name:user.name,
-            email:user.email,
-            profileImageUrl:user.profileImageUrl,
-            role:user.role,
-            token:generateToken(user._id),
+            success: true,
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            profileImageUrl: user.profileImageUrl,
+            role: user.role,
+            token: generateToken(user._id),
         });
 
     } catch (error) {
-        res.status(500).json({message:"Server Error", error: error.message});
+        res.status(500).json({ message: "Server Error", error: error.message });
     }
-}
+};
+
 
 // Login User (POST)
 // access Public
