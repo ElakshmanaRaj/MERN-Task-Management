@@ -61,37 +61,39 @@ const SignUp = () => {
     // API Call
     try {
 
-      // Upload if any image present
-      if(profilePic){
-        const imgUpload = await uploadImage(profilePic);
-        profileImageUrl = imgUpload.imageUrl  || "";
+      if (profilePic) {
+        const formData = new FormData();
+        formData.append("image", profilePic);
+  
+        const imgUpload = await axiosInstance.post(API_PATHS.IMAGE.UPLOAD_IMAGE, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+  
+        profileImageUrl = imgUpload.data.imageUrl || "";
       }
-
-      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER,{
+  
+      // Now register the user
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         name,
-        email, 
+        email,
         password,
         profileImageUrl,
-        adminInviteToken
+        adminInviteToken,
       });
-
-      const {role, token} = await response.data;
-
-      if(token){
+  
+      const { role, token } = response.data;
+  
+      if (token) {
         localStorage.setItem("token", token);
         updateUser(response.data);
-        toast.success("Login successfully")
+        toast.success("Signup successful");
       }
-
+  
       // Redirect based on role
-      setTimeout(()=>{
-        if(role === "admin"){
-          navigate("/admin/dashboard");
-        } else{
-          navigate("/user/dashboard");
-        }
+      setTimeout(() => {
+        navigate(role === "admin" ? "/admin/dashboard" : "/user/dashboard");
       }, 500);
-
+  
     } catch (error) {
 
       if(error.response && error.response.data.message ){
