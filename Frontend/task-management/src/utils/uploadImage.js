@@ -3,7 +3,7 @@ import axiosInstance from "./axiosInstance";
 
 const uploadImage = async (imageFile) => {
   const formData = new FormData();
-  formData.append("image", imageFile); // must match upload.single("image") in backend
+  formData.append("profileImage", imageFile); // must match upload.single("image") in backend
 
   try {
     const response = await axiosInstance.post(
