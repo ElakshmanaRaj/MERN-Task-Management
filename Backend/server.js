@@ -13,6 +13,7 @@ const app = express();
 
 // MiddleWare
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // DB Connection
 connectDB();
