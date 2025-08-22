@@ -8,7 +8,6 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPath";
 import { useContext } from "react";
 import { UserContext } from "../../context/userContext";
-import uploadImage from "../../utils/uploadImage";
 import { toast } from 'react-toastify';
 import { ClipLoader } from "react-spinners"; 
 
