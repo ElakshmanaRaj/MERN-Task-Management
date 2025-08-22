@@ -1,5 +1,5 @@
 
-export const BASE_URL = "https://task-backend-tyzk.onrender.com";
+export const BASE_URL = "https://task-backend-k2hn.onrender.com";
 
 // apiPaths
 export const API_PATHS = {
