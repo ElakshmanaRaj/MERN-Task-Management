@@ -19,9 +19,20 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 
 // CORS Handler
+const origins = [
+    "https://task-reactfrontend.netlify.app",
+    "https://mern-task-management-i7cj.onrender.com",
+    "http://localhost:5050",
+]
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "https://task-reactfrontend.netlify.app/",
+    origin: function (origin, callback) {
+      if (!origin || origins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
