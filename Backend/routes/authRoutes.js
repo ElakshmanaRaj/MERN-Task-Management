@@ -12,7 +12,7 @@ const upload = require("../middlewares/uploadMiddleware");
 
 // authRoutes
 router.post("/register", (req, res, next) => {
-  upload.single("profileImage")(req, res, (err) => {
+  upload.single("profileImageUrl")(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       return res.status(400).json({ message: err.message });
     } else if (err) {
