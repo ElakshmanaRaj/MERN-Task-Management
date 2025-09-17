@@ -22,7 +22,7 @@ const generateToken = (userId)=>{
 const registerUser = async (req, res) => {
     try {
         const { name, email, password, adminInviteToken } = req.body;
-        let profileImageUrl = req.body.profileImageUrl; // default if provided via JSON
+        let profileImageUrl = req.body.profileImageUrl || null; 
 
         // If file uploaded, override with generated URL
         if (req.file) {

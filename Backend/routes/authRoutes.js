@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const {
   registerUser,
   loginUser,
@@ -10,7 +11,16 @@ const router = express.Router();
 const upload = require("../middlewares/uploadMiddleware");
 
 // authRoutes
-router.post("/register", upload.single("profileImage"), registerUser);
+router.post("/register", (req, res, next) => {
+  upload.single("profileImage")(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ message: err.message });
+    } else if (err) {
+      return res.status(400).json({ message: err.message });
+    }
+    registerUser(req, res);
+  });
+})
 router.post("/login", loginUser);
 router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);
