@@ -200,7 +200,7 @@ const CreateTask = () => {
           <div className="col-span-3 form-card">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-medium">
-                {taskId ? "Update Taask" : "Create Task"}
+                {taskId ? "Update Task" : "Create Task"}
               </h2>
               {taskId && (
                 <button
