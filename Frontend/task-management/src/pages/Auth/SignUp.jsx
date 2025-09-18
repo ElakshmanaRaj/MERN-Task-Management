@@ -51,6 +51,7 @@ const SignUp = () => {
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      
   
       const { role, token } = response.data;
   

@@ -29,7 +29,7 @@ const ProfilePhotoSelector = ({image, setImage}) => {
   return (
     <div className='flex justify-center mb-4'>
         <input type="file" 
-        accept='image/x'
+        accept="image/*"
         ref={inputRef}
         onChange={handleImageChange}
         className="hidden"

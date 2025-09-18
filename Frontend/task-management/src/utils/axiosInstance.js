@@ -4,27 +4,28 @@ import {BASE_URL} from "./apiPath";
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
     timeout: 30000,
-    headers:{
-        "Content-Type":"application/json",
-        Accept:"application/json",
+    headers: {
+      Accept: "application/json",
     },
-});
-
-
-// Request Interceptor
-axiosInstance.interceptors.request.use(
-    (config)=>{
-        const accessToken = localStorage.getItem("token");
-        if(accessToken){
-            config.headers.Authorization = `Bearer ${accessToken}`;
-        }
-        return config;
+  });
+  
+  // Keep this so JSON still works, but remove Content-Type for FormData
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      const accessToken = localStorage.getItem("token");
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+  
+      if (config.data instanceof FormData) {
+        delete config.headers["Content-Type"];
+      }
+  
+      return config;
     },
-    (error)=>{
-        return Promise.reject(error);
-    }
-    
-);
+    (error) => Promise.reject(error)
+  );
+  
 
 // Response Interceptor
 axiosInstance.interceptors.response.use(
