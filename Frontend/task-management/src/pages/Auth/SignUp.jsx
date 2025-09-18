@@ -26,52 +26,30 @@ const SignUp = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
+  
     // Validate Input Fields
-    if (!name) {
-      setError("Please enter the name");
-      return;
-    }
-
-    if (!email) {
-      setError("Please enter email address");
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError("Please enter valid email address");
-      return;
-    }
-
-    if (!password) {
-      setError("Please enter the password");
-      return;
-    }
-
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
-    }
+    if (!name) return setError("Please enter the name");
+    if (!email) return setError("Please enter email address");
+    if (!validateEmail(email)) return setError("Please enter valid email address");
+    if (!password) return setError("Please enter the password");
+    if (password.length < 8) return setError("Password must be at least 8 characters");
+  
     setError("");
     setLoading(true);
-
-    // API Call
-    try {
-
-      if (profilePic) {
-        const formData = new FormData();
-        formData.append("profileImageUrl", profilePic);
-      }
-
-      let profileImageUrl = profilePic;
   
-      // Now register the user
-      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
-        name,
-        email,
-        password,
-        profileImageUrl,
-        adminInviteToken,
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("adminInviteToken", adminInviteToken);
+  
+      if (profilePic) {
+        formData.append("profileImageUrl", profilePic); // <-- file appended here
+      }
+  
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
   
       const { role, token } = response.data;
@@ -82,24 +60,20 @@ const SignUp = () => {
         toast.success("Signup successful");
       }
   
-      // Redirect based on role
       setTimeout(() => {
         navigate(role === "admin" ? "/admin/dashboard" : "/user/dashboard");
       }, 500);
-  
     } catch (error) {
-
-      if(error.response && error.response.data.message ){
+      if (error.response?.data?.message) {
         setError(error.response.data.message);
       } else {
         setError("Something went wrong, Please try again later");
       }
-
-    } finally{
+    } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <AuthLayout>
       <div className="lg:w-[100%] mb-5 md:mb-0 mt-10 md:mt-0 flex flex-col justify-center">
