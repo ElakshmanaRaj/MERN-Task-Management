@@ -27,8 +27,6 @@ const SignUp = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    let profileImageUrl = "";
-
     // Validate Input Fields
     if (!name) {
       setError("Please enter the name");
@@ -62,14 +60,10 @@ const SignUp = () => {
 
       if (profilePic) {
         const formData = new FormData();
-        formData.append("image", profilePic);
-  
-        const imgUpload = await axiosInstance.post(API_PATHS.IMAGE.UPLOAD_IMAGE, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-  
-        profileImageUrl = imgUpload.data.imageUrl || "";
+        formData.append("profileImageUrl", profilePic);
       }
+
+      let profileImageUrl = profilePic;
   
       // Now register the user
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
