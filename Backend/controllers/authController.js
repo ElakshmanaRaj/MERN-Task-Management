@@ -24,9 +24,8 @@ const registerUser = async (req, res) => {
         const { name, email, password, adminInviteToken } = req.body;
         let profileImageUrl = req.body.profileImageUrl || null; 
 
-        // If file uploaded, override with generated URL
         if (req.file) {
-            profileImageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+            profileImageUrl = req.file.path; 
         }
 
         // check if user already exists

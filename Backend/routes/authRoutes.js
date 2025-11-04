@@ -20,7 +20,7 @@ router.post("/register", (req, res, next) => {
     }
     registerUser(req, res);
   });
-})
+});
 router.post("/login", loginUser);
 router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);
